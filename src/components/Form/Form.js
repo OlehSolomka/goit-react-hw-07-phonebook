@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import * as operations from '../../redux/phonebook/phonebook-operations';
+import * as operations from 'redux/phonebook/phonebook-operations';
 
 import './form.scss';
 

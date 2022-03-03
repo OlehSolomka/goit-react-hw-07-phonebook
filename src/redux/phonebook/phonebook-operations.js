@@ -1,26 +1,19 @@
-import API from '../../api';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { getUsers, postContactItem, deleteContactItem } from 'api/api-requests';
 import {
   submitValueRequest,
   submitValueSuccess,
   submitValueError,
-  deleteValueError,
-  deleteValueRequest,
-  deleteValueSuccess,
-  getContactsError,
   getContactsSuccess,
-  getContactsRequest,
 } from './phonebook-actions';
 
-export const getContacts = () => async dispatch => {
-  dispatch(getContactsRequest());
-
-  try {
-    const { data } = await API.get('/Contacts');
-    dispatch(getContactsSuccess(data));
-  } catch (error) {
-    dispatch(getContactsError(error));
+export const getContacts = createAsyncThunk(
+  'phonebook/getContactsRequest',
+  async () => {
+    const { data } = await getUsers();
+    return data;
   }
-};
+);
 
 export const addContact = data => async dispatch => {
   const contactItem = {
@@ -31,25 +24,23 @@ export const addContact = data => async dispatch => {
   dispatch(submitValueRequest());
 
   try {
-    const resp = await API.get('/Contacts');
+    const resp = await getUsers();
     if (resp.data.find(unit => unit.name === contactItem.name)) {
+      dispatch(getContactsSuccess());
       return alert(`${contactItem.name} is already in your contacts`);
     }
 
-    const { data } = await API.post('/Contacts', contactItem);
+    const { data } = await postContactItem(contactItem);
     dispatch(submitValueSuccess(data));
   } catch (error) {
     submitValueError(error);
   }
 };
 
-export const deleteContact = id => async dispatch => {
-  dispatch(deleteValueRequest());
-
-  try {
-    await API.delete(`/Contacts/${id}`);
-    dispatch(deleteValueSuccess(id));
-  } catch (error) {
-    deleteValueError(error);
+export const deleteContact = createAsyncThunk(
+  'phonebook/deleteValue',
+  async id => {
+    await deleteContactItem(id);
+    return id;
   }
-};
+);

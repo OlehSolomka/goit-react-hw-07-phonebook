@@ -1,20 +1,20 @@
-import './styles/base.scss';
+import 'styles/base.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import * as operations from './redux/phonebook/phonebook-operations';
-import Section from './components/Section';
-import Form from './components/Form';
-import Contactlist from './components/Contactlist';
-import Filter from './components/Filter';
+import { phonebookOperations, phonebookSelectors } from 'redux/phonebook';
+import Section from 'components/Section';
+import Form from 'components/Form';
+import Contactlist from 'components/Contactlist';
+import Filter from 'components/Filter';
 
 const App = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(({ phonebook }) => phonebook.contacts);
-  const loading = useSelector(({ phonebook }) => phonebook.loading);
-  const filterQuery = useSelector(({ phonebook }) => phonebook.filter.query);
+  const contacts = useSelector(phonebookSelectors.getContact);
+  const loading = useSelector(phonebookSelectors.getLoading);
+  const filterQuery = useSelector(phonebookSelectors.getFilterQuery);
 
   useEffect(() => {
-    dispatch(operations.getContacts());
+    dispatch(phonebookOperations.getContacts());
   }, [dispatch]);
 
   const getVIsibleContacts = () => {
@@ -38,7 +38,7 @@ const App = () => {
         ) : (
           <Contactlist
             contacts={filteredItems}
-            onDelete={name => dispatch(operations.deleteContact(name))}
+            onDelete={id => dispatch(phonebookOperations.deleteContact(id))}
           />
         )}
       </Section>
