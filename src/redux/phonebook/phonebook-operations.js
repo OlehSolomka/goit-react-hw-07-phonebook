@@ -4,11 +4,10 @@ import {
   submitValueRequest,
   submitValueSuccess,
   submitValueError,
-  getContactsSuccess,
 } from './phonebook-actions';
 
 export const getContacts = createAsyncThunk(
-  'phonebook/getContactsRequest',
+  'phonebook/getContacts',
   async () => {
     const { data } = await getUsers();
     return data;
@@ -26,7 +25,7 @@ export const addContact = data => async dispatch => {
   try {
     const resp = await getUsers();
     if (resp.data.find(unit => unit.name === contactItem.name)) {
-      dispatch(getContactsSuccess());
+      dispatch(getContacts());
       return alert(`${contactItem.name} is already in your contacts`);
     }
 
