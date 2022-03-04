@@ -9,23 +9,13 @@ import Filter from 'components/Filter';
 
 const App = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(phonebookSelectors.getContact);
+
   const loading = useSelector(phonebookSelectors.getLoading);
-  const filterQuery = useSelector(phonebookSelectors.getFilterQuery);
+  const filteredItems = useSelector(phonebookSelectors.getVisibleContacts);
 
   useEffect(() => {
     dispatch(phonebookOperations.getContacts());
   }, [dispatch]);
-
-  const getVIsibleContacts = () => {
-    const normalizedFilter = filterQuery.toLowerCase();
-
-    return contacts.filter(item =>
-      item.name.toLowerCase().includes(normalizedFilter)
-    );
-  };
-
-  const filteredItems = getVIsibleContacts();
 
   return (
     <div className="root">
